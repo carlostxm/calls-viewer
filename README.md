@@ -2,6 +2,27 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Design
+
+### Group by page
+
+Options:
+
+- Accordion and cards
+- Accordion and tables
+- Date dropdown and table
+- Date picker and table
+
+Benefit of using table is that multiselection actions is already implemented. Clear view.
+
+How pagination would word?
+
+- Accordion: Pagination apply to the whole list
+- Dropdown: Filter current page
+- Date picker: Filter current page
+
+API doesnt support filter by date, but in a real case I would suggest to implement the filter by date in the API and use a date picker to select dates.
+
 ## Available Scripts
 
 In the project directory, you can run:

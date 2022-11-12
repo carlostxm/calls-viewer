@@ -1,3 +1,4 @@
+import { User } from 'model';
 import { client } from './api-client';
 
 const localStorageKey = '__auth_provider_token__';
@@ -11,10 +12,16 @@ interface LoginResponse {
   };
 }
 
-async function login(username: string, password: string): Promise<string> {
+function handleLoginResponse(userData: LoginResponse): User {
+  const { access_token: token, user } = userData;
+  window.localStorage.setItem(localStorageKey, token);
+  return { name: user.username, token };
+}
+
+async function login(username: string, password: string): Promise<User> {
   return client<LoginResponse>('auth/login', {
     data: { username, password },
-  }).then((userData) => userData.user.username);
+  }).then(handleLoginResponse);
 }
 
 async function logout() {
