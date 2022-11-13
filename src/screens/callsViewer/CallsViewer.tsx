@@ -41,10 +41,11 @@ function CallsViewer({ user }: CallsViewerProps) {
   }
 
   if (!page?.callsByDate.size) {
-    return <div>No calls</div>;
+    return <div>No calls 1</div>;
   }
 
   const { totalCount, callsByDate } = page;
+
   return (
     <Spacer data-testid='app' space='s' direction='vertical' width='100%'>
       <Pagination

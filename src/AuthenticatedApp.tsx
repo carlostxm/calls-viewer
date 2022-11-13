@@ -1,12 +1,18 @@
-import { User } from 'model';
+import { useAuth } from 'hooks/useAuth';
 import { Routes, Route } from 'react-router-dom';
 import { CallsViewer, CallDetails } from 'screens';
 
-interface AuthenticatedAppProps {
-  user: User;
-}
+function AuthenticatedApp() {
+  const {
+    state: { user },
+  } = useAuth();
 
-function AuthenticatedApp({ user }: AuthenticatedAppProps) {
+  if (!user) {
+    throw new Error(
+      '<AuthenticatedApp/> cannot be displayed if user is missing'
+    );
+  }
+
   return (
     <>
       <CallsViewer user={user} />

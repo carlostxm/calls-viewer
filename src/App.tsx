@@ -1,25 +1,29 @@
-import React from 'react';
-import { login as callsLogin } from './api';
 import AuthenticatedApp from './AuthenticatedApp';
 import UnauthenticatedApp from './UnauthenticatedApp';
-import { User } from 'model';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { useAuth } from 'hooks/useAuth';
+import { AuthProvider } from 'context/auth';
 
 function App() {
-  const [user, setUser] = React.useState<User | null>(null);
-
-  const login = (user: string, password: string) =>
-    callsLogin(user, password).then((u) => {
-      setUser(u);
-    });
+  const {
+    state: { user },
+  } = useAuth();
 
   return user ? (
     <Router>
-      <AuthenticatedApp user={user} />
+      <AuthenticatedApp />
     </Router>
   ) : (
-    <UnauthenticatedApp login={login} />
+    <UnauthenticatedApp />
   );
 }
 
-export default App;
+function AppWithAuth() {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
+}
+
+export default AppWithAuth;

@@ -1,9 +1,6 @@
 import { LoginForm } from './components';
 import styled from 'styled-components';
-
-interface UnathenticatedAppProps {
-  login: (user: string, password: string) => void;
-}
+import { useAuth } from 'hooks/useAuth';
 
 const Wrapper = styled.div`
   display: flex;
@@ -11,10 +8,12 @@ const Wrapper = styled.div`
   height: 80vh;
 `;
 
-function UnauthenticatedApp({ login }: UnathenticatedAppProps) {
+function UnauthenticatedApp() {
+  const { login } = useAuth();
+
   return (
     <Wrapper>
-      <LoginForm login={login} />
+      <LoginForm onSubmit={login} />
     </Wrapper>
   );
 }

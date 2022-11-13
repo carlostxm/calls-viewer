@@ -9,10 +9,10 @@ import {
 } from '@aircall/tractor';
 
 interface LoginFormProps {
-  login: (user: string, password: string) => void;
+  onSubmit: (user: string, password: string) => void;
 }
 
-function LoginForm({ login }: LoginFormProps) {
+function LoginForm({ onSubmit }: LoginFormProps) {
   function handleFormSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
 
@@ -24,7 +24,7 @@ function LoginForm({ login }: LoginFormProps) {
     const username = target.username.value;
     const password = target.password.value;
 
-    login(username, password);
+    onSubmit(username, password);
   }
 
   return (
