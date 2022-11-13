@@ -1,5 +1,5 @@
 import { PropsWithChildren, useState } from 'react';
-import { login as callsLogin } from 'api';
+import { login as callsLogin } from 'api/auth';
 import AuthContext, {
   AuthContextType,
   INITIAL_AUTH_CONTEXT,
@@ -14,9 +14,9 @@ function AuthProvider({ children }: PropsWithChildren<{}>) {
     setState({ user: null, status: 'loading', error: null });
 
     callsLogin(user, password)
-      .then((u) => {
-        setState({ status: 'auth', user: u, error: null });
-        return u;
+      .then((userData) => {
+        setState({ status: 'auth', user: userData, error: null });
+        return userData;
       })
       .catch((error) => {
         setState({ status: 'no-auth', user: null, error });

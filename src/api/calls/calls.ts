@@ -1,7 +1,7 @@
 import { ApiCall } from 'api/model';
 import { CallsPage, User } from 'model';
 import { getShortDate, translateCallFromApi } from 'translators';
-import { client } from './api-client';
+import { client } from 'api/client';
 
 interface CallsResponse {
   nodes: ApiCall[];
@@ -34,11 +34,13 @@ function handleGetCallsResponse(response: CallsResponse): CallsPage {
 async function getCalls(
   offset: number,
   limit: number,
-  { token }: User
+  { accessToken }: User
 ): Promise<CallsPage> {
   const url = `calls?offset=${offset}&limit=${limit}`;
 
-  return client<CallsResponse>(url, { token }).then(handleGetCallsResponse);
+  return client<CallsResponse>(url, { token: accessToken }).then(
+    handleGetCallsResponse
+  );
 }
 
 export default getCalls;

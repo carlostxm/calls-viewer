@@ -1,7 +1,6 @@
+import { client } from 'api/client';
 import { User } from 'model';
-import { client } from './api-client';
-
-const localStorageKey = '__auth_provider_token__';
+import { AUTH_PROVIDER_TOKEN_KEY } from './config';
 
 interface LoginResponse {
   access_token: string;
@@ -13,9 +12,13 @@ interface LoginResponse {
 }
 
 function handleLoginResponse(userData: LoginResponse): User {
-  const { access_token: token, user } = userData;
-  window.localStorage.setItem(localStorageKey, token);
-  return { name: user.username, token };
+  const { access_token, refresh_token, user } = userData;
+  window.localStorage.setItem(AUTH_PROVIDER_TOKEN_KEY, access_token);
+  return {
+    name: user.username,
+    accessToken: access_token,
+    refreshToken: refresh_token,
+  };
 }
 
 async function login(username: string, password: string): Promise<User> {
@@ -24,8 +27,4 @@ async function login(username: string, password: string): Promise<User> {
   }).then(handleLoginResponse);
 }
 
-async function logout() {
-  window.localStorage.removeItem(localStorageKey);
-}
-
-export { login, logout };
+export default login;

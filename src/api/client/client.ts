@@ -1,4 +1,4 @@
-import { logout } from './auth';
+import { logout } from 'api/auth';
 
 const apiURL = process.env.REACT_APP_API_URL;
 
@@ -6,15 +6,22 @@ type CustomConfig = Partial<{
   data: Record<string, unknown>;
   token: string;
   headers: Record<string, unknown>;
+  method: 'POST' | 'GET';
 }> &
   Record<string, unknown>;
 
 async function client<T = unknown>(
   endpoint: string,
-  { data, token, headers: customHeaders, ...customConfig }: CustomConfig = {}
+  {
+    method,
+    data,
+    token,
+    headers: customHeaders,
+    ...customConfig
+  }: CustomConfig = {}
 ): Promise<T> {
   const config = {
-    method: data ? 'POST' : 'GET',
+    method: method ?? data ? 'POST' : 'GET',
     body: data ? JSON.stringify(data) : undefined,
     headers: {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -42,4 +49,4 @@ async function client<T = unknown>(
     });
 }
 
-export { client };
+export default client;

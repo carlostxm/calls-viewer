@@ -1,3 +1,10 @@
+/**
+ * API model
+ * ***********
+ * These entities should not be used outside ./api. Use adapters or translation function to adapt API entities
+ * to application entities to enforce decoupling between the API and the application.
+ */
+
 export interface Note {
   id: string;
   content: string;

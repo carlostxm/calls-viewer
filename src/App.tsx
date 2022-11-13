@@ -9,6 +9,8 @@ function App() {
     state: { user },
   } = useAuth();
 
+  console.log('App rendered', user);
+
   return user ? (
     <Router>
       <AuthenticatedApp />
