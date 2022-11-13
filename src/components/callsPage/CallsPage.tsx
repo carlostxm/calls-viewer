@@ -23,7 +23,12 @@ function CallsPage({ groupedCalls }: CallsPageProps) {
             </Box>
           </Accordion.Header>
           <Accordion.Body>
-            <CallsTable calls={groupedCalls.get(title)!} />
+            <CallsTable
+              calls={groupedCalls.get(title)!}
+              onViewCall={() => {
+                window.open('/details');
+              }}
+            />
           </Accordion.Body>
         </Accordion.Item>
       ))}

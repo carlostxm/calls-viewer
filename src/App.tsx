@@ -3,6 +3,7 @@ import { login as callsLogin } from './api';
 import AuthenticatedApp from './AuthenticatedApp';
 import UnauthenticatedApp from './UnauthenticatedApp';
 import { User } from 'model';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 function App() {
   const [user, setUser] = React.useState<User | null>(null);
@@ -13,7 +14,9 @@ function App() {
     });
 
   return user ? (
-    <AuthenticatedApp user={user} />
+    <Router>
+      <AuthenticatedApp user={user} />
+    </Router>
   ) : (
     <UnauthenticatedApp login={login} />
   );

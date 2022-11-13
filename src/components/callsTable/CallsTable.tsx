@@ -6,6 +6,7 @@ const COLUMNS_CONFIG = [
   {
     id: 'via',
     label: 'Via',
+    sortable: true,
   },
   {
     id: 'callType',
@@ -27,17 +28,23 @@ const COLUMNS_CONFIG = [
 
 interface CallsTableProps {
   calls: Call[];
+  onViewCall: (calls: Call[]) => void;
 }
 
-function CallsTable({ calls }: CallsTableProps) {
+function CallsTable({ calls, onViewCall }: CallsTableProps) {
   const ref = useRef<HTMLDivElement>(null);
+
+  function handleViewClick(values: Call[]) {
+    onViewCall(values);
+  }
 
   return (
     <div
       ref={ref}
       style={{
-        // height: '500px',
+        overflowX: 'hidden',
         overflowY: 'auto',
+        padding: '8px',
       }}
     >
       <Tractor>
@@ -45,12 +52,11 @@ function CallsTable({ calls }: CallsTableProps) {
           bulkActions={[
             {
               label: 'View',
-              onExecute: function noRefCheck() {},
+              onExecute: handleViewClick,
             },
             {
-              label: 'Delete',
+              label: 'Archive',
               onExecute: function noRefCheck() {},
-              // renderer: function noRefCheck() {},
             },
           ]}
           columns={COLUMNS_CONFIG}
