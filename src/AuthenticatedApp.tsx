@@ -14,13 +14,10 @@ function AuthenticatedApp() {
   }
 
   return (
-    <>
-      <CallsViewer user={user} />
-      <Routes>
-        <Route path='/' element={<CallsViewer user={user} />} />
-        <Route path='/details' element={<CallDetails />} />
-      </Routes>
-    </>
+    <Routes>
+      <Route path='/' element={<CallsViewer user={user} />} />
+      <Route path='/details' element={<CallDetails />} />
+    </Routes>
   );
 }
 
