@@ -1,6 +1,9 @@
 import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
+// Basic Drawer component was implemented as I had some problems using @aircall/tractor Modal.
+// Even configuring the portal property in the Modal component I couldnt show the modal properly.
+
 interface Props {
   isOpen: boolean;
 }
