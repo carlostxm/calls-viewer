@@ -44,8 +44,9 @@ function CallsPage({ groupedCalls }: CallsPageProps) {
       </Accordion.Container>
       <Drawer isOpen={isModalOpen}>
         <Spacer space='s' direction='vertical' width='100%'>
-          <CallDetails call={selectedCall} />
+          {/*Button placed first intentionally as is the only way to close the Drawer, more info in Drawer inside the Drawer component*/}
           <Button onClick={closeModal}>Close</Button>
+          <CallDetails call={selectedCall} />
         </Spacer>
       </Drawer>
     </div>
