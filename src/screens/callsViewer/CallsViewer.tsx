@@ -3,10 +3,7 @@ import { Pagination, Spacer } from '@aircall/tractor';
 import { CallsPage as GroupedCallsPage } from 'components';
 import { getCalls } from 'api';
 import { CallsPage, User } from 'model';
-
-interface CallsViewerProps {
-  user: User;
-}
+import { useAuth } from 'hooks/useAuth';
 
 async function fetchCalls(
   pageNumber: number,
@@ -19,14 +16,18 @@ async function fetchCalls(
   return getCalls(offset, limit, user);
 }
 
-function CallsViewer({ user }: CallsViewerProps) {
+function CallsViewer() {
   const [page, setPage] = useState<CallsPage | null>(null);
   const [pageSize, setPageSize] = useState<number>(25);
   const [activePage, setActivePage] = useState<number>(1);
+  const {
+    state: { user },
+  } = useAuth();
 
   useEffect(() => {
     if (!user) {
       setPage(null);
+      return;
     }
 
     fetchCalls(activePage, pageSize, user).then((calls) => setPage(calls));

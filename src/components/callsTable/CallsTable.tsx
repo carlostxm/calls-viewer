@@ -1,4 +1,4 @@
-import { Tractor, Table } from '@aircall/tractor';
+import { Tractor, Table, RowActionType } from '@aircall/tractor';
 import { useRef } from 'react';
 import { Call } from 'model';
 
@@ -28,14 +28,14 @@ const COLUMNS_CONFIG = [
 
 interface CallsTableProps {
   calls: Call[];
-  onViewCall: (calls: Call[]) => void;
+  onViewCall: (call: Call) => void;
 }
 
 function CallsTable({ calls, onViewCall }: CallsTableProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  function handleViewClick(values: Call[]) {
-    onViewCall(values);
+  function handleViewClick(call: Call) {
+    onViewCall(call);
   }
 
   return (
@@ -51,14 +51,17 @@ function CallsTable({ calls, onViewCall }: CallsTableProps) {
         <Table
           bulkActions={[
             {
-              label: 'View',
-              onExecute: handleViewClick,
-            },
-            {
               label: 'Archive',
               onExecute: function noRefCheck() {},
             },
           ]}
+          rowActions={[
+            {
+              label: 'View',
+              onExecute: handleViewClick,
+            },
+          ]}
+          rowActionsType={RowActionType.Inline}
           columns={COLUMNS_CONFIG}
           data={calls}
           verticalScrollingParent={ref}

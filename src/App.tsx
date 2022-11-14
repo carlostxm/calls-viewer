@@ -1,6 +1,5 @@
 import AuthenticatedApp from './AuthenticatedApp';
 import UnauthenticatedApp from './UnauthenticatedApp';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { useAuth } from 'hooks/useAuth';
 import { AuthProvider } from 'context/auth';
 
@@ -9,15 +8,7 @@ function App() {
     state: { user },
   } = useAuth();
 
-  console.log('App rendered', user);
-
-  return user ? (
-    <Router>
-      <AuthenticatedApp />
-    </Router>
-  ) : (
-    <UnauthenticatedApp />
-  );
+  return user ? <AuthenticatedApp /> : <UnauthenticatedApp />;
 }
 
 function AppWithAuth() {
