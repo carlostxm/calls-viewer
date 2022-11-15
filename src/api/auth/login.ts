@@ -1,17 +1,9 @@
 import { client } from 'api/client';
+import { AuthResponse } from 'api/model';
 import { User } from 'model';
 import { AUTH_PROVIDER_TOKEN_KEY } from './config';
 
-interface LoginResponse {
-  access_token: string;
-  refresh_token: string;
-  user: {
-    id: string;
-    username: string;
-  };
-}
-
-function handleLoginResponse(userData: LoginResponse): User {
+export function handleLoginResponse(userData: AuthResponse): User {
   const { access_token, refresh_token, user } = userData;
   window.localStorage.setItem(AUTH_PROVIDER_TOKEN_KEY, access_token);
   return {
@@ -22,7 +14,7 @@ function handleLoginResponse(userData: LoginResponse): User {
 }
 
 async function login(username: string, password: string): Promise<User> {
-  return client<LoginResponse>('auth/login', {
+  return client<AuthResponse>('auth/login', {
     data: { username, password },
   }).then(handleLoginResponse);
 }

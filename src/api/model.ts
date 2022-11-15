@@ -22,3 +22,12 @@ export interface ApiCall {
   created_at: string; // When the call has been made.
   notes: Note[]; // Notes related to a given call
 }
+
+export interface AuthResponse {
+  access_token: string;
+  refresh_token: string;
+  user: {
+    id: string;
+    username: string;
+  };
+}
