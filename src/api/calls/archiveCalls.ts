@@ -4,7 +4,6 @@ import { Call, User } from 'model';
 import { translateCallFromApi } from 'translators';
 
 function handleResponse(node: ApiCall): Call {
-  console.log(`Call has been archived successfully: ${node}`);
   return translateCallFromApi(node);
 }
 

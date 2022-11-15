@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Pagination, Spacer } from '@aircall/tractor';
 import { CallsPage as GroupedCallsPage } from 'components';
 import { getCalls, subscribePushChannel } from 'api';
@@ -31,6 +31,8 @@ function CallsViewer() {
     setPageSize,
   } = useCallsPage();
 
+  const isSubscribed = useRef<boolean>(false);
+
   const {
     state: { user },
   } = useAuth();
@@ -51,15 +53,16 @@ function CallsViewer() {
     }
 
     fetchCalls(activePage, pageSize, user).then((calls) => setPage(calls));
-  }, [user, setPage, activePage, pageSize]);
+  }, [user, activePage, pageSize, setPage]);
 
   useEffect(() => {
-    if (!user) {
+    if (!user || isSubscribed.current) {
       return;
     }
 
+    isSubscribed.current = true;
     subscribePushChannel(user, handlePushEvent);
-  }, [user, handlePushEvent]);
+  }, [user, isSubscribed, handlePushEvent]);
 
   function handlePageSize(newPageSize: number) {
     setPageSize(newPageSize);

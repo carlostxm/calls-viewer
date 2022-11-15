@@ -1,5 +1,5 @@
 import { CallsPage, Call } from 'model';
-import { useReducer, useState } from 'react';
+import { useCallback, useReducer, useState } from 'react';
 import { callsPageReducer, State, ActionType } from 'reducers/callsPageReducer';
 
 function useCallsPage() {
@@ -13,13 +13,13 @@ function useCallsPage() {
     return !(page?.callsByDate && Object.keys(page.callsByDate).length > 0);
   }
 
-  function setPage(page: CallsPage | null) {
+  const setPage = useCallback((page: CallsPage | null) => {
     dispatch({ type: 'set-page', payload: page });
-  }
+  }, []);
 
-  function updateCall(call: Call) {
+  const updateCall = useCallback((call: Call) => {
     dispatch({ type: 'update-call', payload: call });
-  }
+  }, []);
 
   return {
     page,
