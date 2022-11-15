@@ -1,4 +1,4 @@
-import { Tractor, Table, RowActionType } from '@aircall/tractor';
+import { Table, RowActionType } from '@aircall/tractor';
 import { useRef } from 'react';
 import { Call } from 'model';
 
@@ -24,15 +24,20 @@ const COLUMNS_CONFIG = [
     id: 'duration',
     label: 'Duration',
   },
+  {
+    id: 'isArchived',
+    label: 'Archived',
+  },
 ];
 
 interface CallsTableProps {
   calls: Call[];
   onViewCall: (call: Call) => void;
+  onArchiveCalls: (calls: Call[]) => void;
 }
 
-function CallsTable({ calls, onViewCall }: CallsTableProps) {
-  const ref = useRef<HTMLDivElement>(null);
+function CallsTable({ calls, onViewCall, onArchiveCalls }: CallsTableProps) {
+  const tableRef = useRef<HTMLDivElement>(null);
 
   function handleViewClick(call: Call) {
     onViewCall(call);
@@ -40,33 +45,31 @@ function CallsTable({ calls, onViewCall }: CallsTableProps) {
 
   return (
     <div
-      ref={ref}
+      ref={tableRef}
       style={{
         overflowX: 'hidden',
         overflowY: 'auto',
         padding: '8px',
       }}
     >
-      <Tractor>
-        <Table
-          bulkActions={[
-            {
-              label: 'Archive',
-              onExecute: function noRefCheck() {},
-            },
-          ]}
-          rowActions={[
-            {
-              label: 'View',
-              onExecute: handleViewClick,
-            },
-          ]}
-          rowActionsType={RowActionType.Inline}
-          columns={COLUMNS_CONFIG}
-          data={calls}
-          verticalScrollingParent={ref}
-        />
-      </Tractor>
+      <Table
+        bulkActions={[
+          {
+            label: 'Archive',
+            onExecute: onArchiveCalls,
+          },
+        ]}
+        rowActions={[
+          {
+            label: 'View',
+            onExecute: handleViewClick,
+          },
+        ]}
+        rowActionsType={RowActionType.Inline}
+        columns={COLUMNS_CONFIG}
+        data={calls}
+        verticalScrollingParent={tableRef}
+      />
     </div>
   );
 }

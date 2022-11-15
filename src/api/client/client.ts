@@ -6,9 +6,16 @@ type CustomConfig = Partial<{
   data: Record<string, unknown>;
   token: string;
   headers: Record<string, unknown>;
-  method: 'POST' | 'GET';
+  method: 'POST' | 'GET' | 'PUT';
 }> &
   Record<string, unknown>;
+
+function getMethodOrBestEffort(
+  method: CustomConfig['method'],
+  data?: Record<string, unknown>
+) {
+  return method ?? (data ? 'POST' : 'GET');
+}
 
 async function client<T = unknown>(
   endpoint: string,
@@ -21,7 +28,7 @@ async function client<T = unknown>(
   }: CustomConfig = {}
 ): Promise<T> {
   const config = {
-    method: method ?? data ? 'POST' : 'GET',
+    method: getMethodOrBestEffort(method, data),
     body: data ? JSON.stringify(data) : undefined,
     headers: {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),

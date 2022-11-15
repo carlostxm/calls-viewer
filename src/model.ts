@@ -11,7 +11,7 @@ export interface Note {
 
 interface CallMandatoryFields {
   id: string;
-  isArchived: boolean;
+  isArchived: 'Yes' | 'No';
   notes: Note[];
   createdAt: string;
   from: string;
@@ -24,7 +24,7 @@ interface CallMandatoryFields {
 export type Call = CallMandatoryFields & Record<string, unknown>;
 
 export interface CallsPage {
-  callsByDate: Map<string, Call[]>;
+  callsByDate: Record<string, Call[]>;
   totalCount: number;
   hasNextPage: boolean;
 }

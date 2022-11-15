@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Pagination, Spacer } from '@aircall/tractor';
 import { CallsPage as GroupedCallsPage } from 'components';
-import { getCalls } from 'api';
+import { getCalls, subscribePushChannel } from 'api';
 import { CallsPage, User } from 'model';
 import { useAuth } from 'hooks/useAuth';
+import { useCallsPage } from 'hooks/useCallsPage';
+import { translateCallFromApi } from 'translators';
+import { ApiCall } from 'api/model';
 
 async function fetchCalls(
   pageNumber: number,
@@ -17,12 +20,29 @@ async function fetchCalls(
 }
 
 function CallsViewer() {
-  const [page, setPage] = useState<CallsPage | null>(null);
-  const [pageSize, setPageSize] = useState<number>(25);
-  const [activePage, setActivePage] = useState<number>(1);
+  const {
+    page,
+    setPage,
+    updateCall,
+    isPageEmpty,
+    activePage,
+    pageSize,
+    setActivePage,
+    setPageSize,
+  } = useCallsPage();
+
   const {
     state: { user },
   } = useAuth();
+
+  const handlePushEvent = useCallback(
+    (node: ApiCall) => {
+      const call = translateCallFromApi(node);
+
+      updateCall(call);
+    },
+    [updateCall]
+  );
 
   useEffect(() => {
     if (!user) {
@@ -33,6 +53,14 @@ function CallsViewer() {
     fetchCalls(activePage, pageSize, user).then((calls) => setPage(calls));
   }, [user, setPage, activePage, pageSize]);
 
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    subscribePushChannel(user, handlePushEvent);
+  }, [user, handlePushEvent]);
+
   function handlePageSize(newPageSize: number) {
     setPageSize(newPageSize);
   }
@@ -41,11 +69,11 @@ function CallsViewer() {
     setActivePage(newPageNumber);
   }
 
-  if (!page?.callsByDate.size) {
+  if (isPageEmpty()) {
     return <div>No calls 1</div>;
   }
 
-  const { totalCount, callsByDate } = page;
+  const { totalCount, callsByDate } = page!;
 
   return (
     <Spacer data-testid='app' space='s' direction='vertical' width='100%'>

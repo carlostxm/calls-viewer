@@ -1,18 +1,36 @@
 import { Accordion, Box, Typography, Button, Spacer } from '@aircall/tractor';
+import archiveCall from 'api/calls/archiveCalls';
 import { CallDetails, CallsTable, Drawer } from 'components';
+import { useAuth } from 'hooks';
 import { Call } from 'model';
 import { useState, useMemo } from 'react';
 
 interface CallsPageProps {
-  groupedCalls: Map<string, Call[]>;
+  groupedCalls: Record<string, Call[]>;
 }
+
 function CallsPage({ groupedCalls }: CallsPageProps) {
   const titles = useMemo(
-    () => Array.from(groupedCalls.keys()).sort(),
+    () => Array.from(Object.keys(groupedCalls)).sort(),
     [groupedCalls]
   );
+  const {
+    state: { user },
+  } = useAuth();
+
   const [selectedCall, setSelectedCall] = useState<Call | null>(null);
-  const closeModal = () => setSelectedCall(null);
+
+  function closeModal() {
+    setSelectedCall(null);
+  }
+
+  function handleArchiveCalls(calls: Call[]) {
+    calls.forEach((call) => archiveCall(call, user!));
+  }
+
+  function handleViewCall(call: Call) {
+    setSelectedCall(call);
+  }
 
   const isModalOpen = Boolean(selectedCall);
 
@@ -33,10 +51,9 @@ function CallsPage({ groupedCalls }: CallsPageProps) {
             </Accordion.Header>
             <Accordion.Body>
               <CallsTable
-                calls={groupedCalls.get(title)!}
-                onViewCall={(call) => {
-                  setSelectedCall(call);
-                }}
+                calls={groupedCalls[title]}
+                onViewCall={handleViewCall}
+                onArchiveCalls={handleArchiveCalls}
               />
             </Accordion.Body>
           </Accordion.Item>

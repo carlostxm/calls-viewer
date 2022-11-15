@@ -11,17 +11,20 @@ interface CallsResponse {
 
 function handleGetCallsResponse(response: CallsResponse): CallsPage {
   const { hasNextPage, totalCount, nodes } = response;
-  const callsByDate = new Map();
+  let callsByDate: CallsPage['callsByDate'] = {};
 
   nodes.forEach((node) => {
     const key = getShortDate(new Date(node.created_at));
 
-    if (!callsByDate.has(key)) {
-      callsByDate.set(key, []);
+    if (!callsByDate[key]) {
+      callsByDate = {
+        ...callsByDate,
+        [key]: [],
+      };
     }
 
     const translatedCall = translateCallFromApi(node);
-    callsByDate.get(key).push(translatedCall);
+    callsByDate[key].push(translatedCall);
   });
 
   return {

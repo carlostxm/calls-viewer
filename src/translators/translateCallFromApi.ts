@@ -14,7 +14,7 @@ function translateCallFromApi({
   ...rest
 }: ApiCall): Call {
   return {
-    isArchived: is_archived,
+    isArchived: is_archived ? 'Yes' : 'No',
     notes,
     id,
     createdAt: created_at,
