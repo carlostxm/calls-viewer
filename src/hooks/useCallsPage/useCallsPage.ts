@@ -1,5 +1,4 @@
-import { subscribePushChannel } from 'api/auth';
-import { getCalls } from 'api/calls';
+import { subscribePushChannel, getCalls } from 'api';
 import { useAuth } from 'hooks/useAuth';
 import { CallsPage, Call, User } from 'model';
 import { useCallback, useReducer, useState, useEffect, useRef } from 'react';

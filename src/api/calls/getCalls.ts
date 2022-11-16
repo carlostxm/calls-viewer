@@ -3,7 +3,7 @@ import { CallsPage, User } from 'model';
 import { getShortDate, translateCallFromApi } from 'translators';
 import { client } from 'api/client';
 
-interface CallsResponse {
+export interface CallsResponse {
   nodes: ApiCall[];
   totalCount: number;
   hasNextPage: boolean;
