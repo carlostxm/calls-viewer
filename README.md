@@ -57,7 +57,7 @@ Function `client` manage fetch request throw `window.fetch` this is a simple app
 
 ## Tests
 
-I got some problems in the tests of components using the library `@aircall/tractor`.
+I got some problems with the UI components tests that imports the library `@aircall/tractor`. The error is `ReferenceError: regeneratorRuntime is not defined`.
 
 # Improvements
 
