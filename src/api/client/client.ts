@@ -47,12 +47,14 @@ async function client<T = unknown>(
         window.location.reload();
         return Promise.reject({ message: 'Please re-authenticate.' });
       }
+
       const data = await response.json();
+
       if (response.ok) {
         return data;
-      } else {
-        return Promise.reject(data);
       }
+
+      return Promise.reject(data);
     });
 }
 

@@ -1,10 +1,21 @@
-import { User } from 'model';
+import { ApiCall } from 'api/model';
+import { Call, User } from 'model';
 import Pusher from 'pusher-js';
+import { translateCallFromApi } from 'translators';
 import { PUSHER_CONFIG } from './config';
+
+function handleChannelEvent(
+  callback: (call: Call) => void
+): (node: ApiCall) => void {
+  return function (node: ApiCall) {
+    const call = translateCallFromApi(node);
+    callback(call);
+  };
+}
 
 function subscribePushChannel(
   { accessToken }: User,
-  callback: (data: any) => void
+  callback: (call: Call) => void
 ) {
   const pusher = new Pusher(PUSHER_CONFIG.appKey, {
     authEndpoint: PUSHER_CONFIG.appAuthEndpoint,
@@ -18,7 +29,7 @@ function subscribePushChannel(
 
   const channel = pusher.subscribe('private-aircall');
 
-  channel.bind('update-call', callback);
+  channel.bind('update-call', handleChannelEvent(callback));
 }
 
 export default subscribePushChannel;

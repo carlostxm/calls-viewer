@@ -1,29 +1,10 @@
-import { useCallback, useEffect, useRef } from 'react';
 import { Pagination, Spacer } from '@aircall/tractor';
 import { CallsPage as GroupedCallsPage } from 'components';
-import { getCalls, subscribePushChannel } from 'api';
-import { CallsPage, User } from 'model';
-import { useAuth } from 'hooks/useAuth';
 import { useCallsPage } from 'hooks/useCallsPage';
-import { translateCallFromApi } from 'translators';
-import { ApiCall } from 'api/model';
-
-async function fetchCalls(
-  pageNumber: number,
-  size: number,
-  user: User
-): Promise<CallsPage> {
-  const offset = (pageNumber - 1) * size;
-  const limit = pageNumber * size;
-
-  return getCalls(offset, limit, user);
-}
 
 function CallsViewer() {
   const {
     page,
-    setPage,
-    updateCall,
     isPageEmpty,
     activePage,
     pageSize,
@@ -31,59 +12,18 @@ function CallsViewer() {
     setPageSize,
   } = useCallsPage();
 
-  const isSubscribed = useRef<boolean>(false);
-
-  const {
-    state: { user },
-  } = useAuth();
-
-  const handlePushEvent = useCallback(
-    (node: ApiCall) => {
-      const call = translateCallFromApi(node);
-
-      updateCall(call);
-    },
-    [updateCall]
-  );
-
-  useEffect(() => {
-    if (!user) {
-      setPage(null);
-      return;
-    }
-
-    fetchCalls(activePage, pageSize, user).then((calls) => setPage(calls));
-  }, [user, activePage, pageSize, setPage]);
-
-  useEffect(() => {
-    if (!user || isSubscribed.current) {
-      return;
-    }
-
-    isSubscribed.current = true;
-    subscribePushChannel(user, handlePushEvent);
-  }, [user, isSubscribed, handlePushEvent]);
-
-  function handlePageSize(newPageSize: number) {
-    setPageSize(newPageSize);
-  }
-
-  function handlePageChange(newPageNumber: number) {
-    setActivePage(newPageNumber);
-  }
-
   if (isPageEmpty()) {
-    return <div>No calls 1</div>;
+    return null;
   }
 
   const { totalCount, callsByDate } = page!;
 
   return (
-    <Spacer data-testid='app' space='s' direction='vertical' width='100%'>
+    <Spacer space='s' direction='vertical' width='100%'>
       <Pagination
         activePage={activePage}
-        onPageChange={handlePageChange}
-        onPageSizeChange={handlePageSize}
+        onPageChange={setActivePage}
+        onPageSizeChange={setPageSize}
         pageSize={pageSize}
         recordsTotalCount={totalCount}
       />
