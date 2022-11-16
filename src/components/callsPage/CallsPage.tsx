@@ -20,7 +20,7 @@ function CallsPage({ groupedCalls }: CallsPageProps) {
 
   const [selectedCall, setSelectedCall] = useState<Call | null>(null);
 
-  function closeModal() {
+  function closePanel() {
     setSelectedCall(null);
   }
 
@@ -62,7 +62,7 @@ function CallsPage({ groupedCalls }: CallsPageProps) {
       <Drawer isOpen={isModalOpen}>
         <Spacer space='s' direction='vertical' width='100%'>
           {/*Button placed first intentionally as is the only way to close the Drawer, more info in Drawer inside the Drawer component*/}
-          <Button onClick={closeModal}>Close</Button>
+          <Button onClick={closePanel}>Close</Button>
           <CallDetails call={selectedCall} />
         </Spacer>
       </Drawer>

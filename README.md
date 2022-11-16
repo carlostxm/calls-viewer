@@ -1,67 +1,69 @@
-# Getting Started with Create React App
+# Aircall Frontend Technical Test
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and use the Aircall's Design System called [Tractor](https://tractor.aircall.io/).
 
-## Design
+# Functionality
 
-### Group by page
+This application implements the following functionality:
 
-Options:
+- Display a paginated list of calls grouped by date.
+- Display the call details view in a slider panel when the user clicks in the view link at the end of the table's row.
+- Archive or un-archive one or multiple calls and display the results on real-time.
+- Authentication is managed by a login form displayed when the application is started.
 
-- Accordion and cards
-- Accordion and tables
-- Date dropdown and table
-- Date picker and table
+# Start the application
 
-Benefit of using table is that multiselection actions is already implemented. Clear view.
+Just execute `npm install` and `npm start`.
 
-How pagination would word?
+# Project structure
 
-- Accordion: Pagination apply to the whole list
-- Dropdown: Filter current page
-- Date picker: Filter current page
+## Folders
 
-API doesnt support filter by date, but in a real case I would suggest to implement the filter by date in the API and use a date picker to select dates.
+| Folder      | Description                                                                 |
+| ----------- | --------------------------------------------------------------------------- |
+| api         | Functions for HTTP requests                                                 |
+| components  | UI components                                                               |
+| context     | Context definitions i.e. `mapLayers` that contains the app global state     |
+| fixtures    | Static mocked data                                                          |
+| hooks       | Common hooks reusable by the components                                     |
+| reducers    | Global state's reducer functions                                            |
+| screens     | Application's screens                                                       |
+| translators | Utility function specialized in converting objects from one type to another |
 
-## Available Scripts
+## Main Components
 
-In the project directory, you can run:
+| Component              | Description                                                                      |
+| ---------------------- | -------------------------------------------------------------------------------- |
+| index.tsx              | Attaches React root node to the DOM and add the Tractor's ThemeProvider          |
+| App.tsx                | Application main component                                                       |
+| AuthenticatedApp.tsx   | Fetchs and displays the calls when the user has been logged in                   |
+| UnauthenticatedApp.tsx | Displays the login form                                                          |
+| AuthProvider.tsx       | Manages the user authentication and pass to the components using React Context   |
+| CallsViewer.tsx        | Displays Pagination component and the CallsPage based on the Pagination settings |
+| CallsPage.tsx          | Displays the calls for a page grouped by date                                    |
+| CallsTable.tsx         | Displays the call attributes in a tabular format                                 |
+| CallDetails.tsx        | Displays a detailed view of the call selected                                    |
 
-### `npm start`
+## Custom Hooks
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+| Name         | Description                                                                                            |
+| ------------ | ------------------------------------------------------------------------------------------------------ |
+| useAuth      | Exposes AuthContext state and functions and checks that the component has been wrapped in AuthProvider |
+| useCallsPage | Manages Calls page data and fetching operations                                                        |
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Data Fetching
 
-### `npm test`
+Function `client` manage fetch request throw `window.fetch` this is a simple approach that probably could be improved using `Axios`, `react-query` or other data fetching library. In the case of `Axios`, it provides the `interceptors` functionality which can be useful to manage the access token refreshing, or `cancel tokens` to cancel duplicated requests.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Tests
 
-### `npm run build`
+I got some problems in the tests of components using the library `@aircall/tractor`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Improvements
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+These are things that I would have liked to implement but I didn`t finally by lack of time:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Refresh the access token when it expires. Here I would liked to use Axios interceptors or create a new custom hook i.e. useAsync to intercept each API call being able to refresh the token when a 401 error is returned.
+- Recover session after closing the application to avoid show the Login form each time the application is opened.
+- Increase test coverage.
+- Loading spinner while fetching.
