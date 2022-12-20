@@ -10,9 +10,7 @@ function handleResponse(node: ApiCall): Call {
 function archiveCall({ id }: Call, { accessToken }: User): Promise<Call> {
   const url = `calls/${id}/archive`;
 
-  return client<ApiCall>(url, { method: 'PUT', token: accessToken }).then(
-    handleResponse
-  );
+  return client<ApiCall>(url, { method: 'PUT' }).then(handleResponse);
 }
 
 export default archiveCall;

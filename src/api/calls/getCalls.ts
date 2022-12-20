@@ -41,9 +41,7 @@ async function getCalls(
 ): Promise<CallsPage> {
   const url = `calls?offset=${offset}&limit=${limit}`;
 
-  return client<CallsResponse>(url, { token: accessToken }).then(
-    handleGetCallsResponse
-  );
+  return client<CallsResponse>(url).then(handleGetCallsResponse);
 }
 
 export default getCalls;

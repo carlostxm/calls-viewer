@@ -1,11 +1,26 @@
 import { client } from 'api/client';
+import {
+  AUTH_PROVIDER_ACCESS_TOKEN_KEY,
+  AUTH_PROVIDER_REFRESH_TOKEN_KEY,
+} from './config';
 
-async function refreshAccessToken(refreshToken: string) {
-  return client('auth/refresh-token-v2', {
+interface RefreshAccessTokenResponse {
+  access_token: string;
+  refresh_token: string;
+}
+
+async function refreshAccessToken() {
+  const refreshToken = await localStorage.getItem(
+    AUTH_PROVIDER_REFRESH_TOKEN_KEY
+  );
+  return client<RefreshAccessTokenResponse>('auth/refresh-token-v2', {
     method: 'POST',
-    token: refreshToken,
-  }).then((response: any) => {
-    console.log('refresh-token', response);
+    headers: {
+      Authorization: `Bearer ${refreshToken}`,
+    },
+  }).then(({ access_token }: RefreshAccessTokenResponse) => {
+    console.log('refresh-token', access_token);
+    window.localStorage.setItem(AUTH_PROVIDER_ACCESS_TOKEN_KEY, access_token);
   });
 }
 
